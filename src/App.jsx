@@ -3,18 +3,26 @@ import Footer from './components/Footer'
 import Header from './components/Header'
 import Guitar from './components/Guitar'
 import { useState } from 'react'
-import { useEffect } from 'react'
 import { db } from './data/db'
 
 function App() {
 
-    const [data, setData] = useState([])
+    const [data, setData] = useState(db)
+    const [cart, setCart] = useState([])
 
-    useEffect(() => {
-        setData(db)
-    }, [])
+    function addToCart(item) {
+        const existingItemIndex = cart.findIndex(cartItem => cartItem.id === item.id);
 
-    console.log(data)
+        if (existingItemIndex !== -1) {
+            const updatedCart = [...cart];
+            updatedCart[existingItemIndex].quantity++;
+            setCart(updatedCart);
+        } else {
+            // Si el ítem no existe, lo agrega con cantidad 1
+            item.quantity = 1;
+            setCart(prevCart => [...prevCart, item]);
+        }
+    }
 
     return (
         <>
@@ -24,9 +32,11 @@ function App() {
 
                 <div className="row mt-5">
                     {data.map((guitar) => (
-                        <Guitar 
+                        <Guitar
                             key={guitar.id}
-                            guitar = {guitar} />
+                            guitar={guitar}
+                            addToCart={addToCart}
+                        />
                     ))
                     }
                 </div>
