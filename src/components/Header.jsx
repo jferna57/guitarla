@@ -1,15 +1,16 @@
+import { useMemo } from 'react'
 
-export default function Header({ cart, setCart }) {
+export default function Header({ cart, setCart, removeItemFromCart, increaseQuantity, reduceQuantity, clearCart }) {
 
-    // State Derivado
-    const isEmpyCart = cart.length === 0;
+    // State Derivado + useMemo
+    const isEmpyCart = useMemo(() => cart.length === 0, [cart]);
 
-    const cartTotal = () => cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const cartTotal = useMemo(() => cart.reduce((acc, item) => acc + item.price * item.quantity, 0), [cart]);
 
 
     function vaciarCarrito() {
         setCart([]);
-    }   
+    }
 
     return (
         <header className="py-5 header">
@@ -58,6 +59,7 @@ export default function Header({ cart, setCart }) {
                                                             <button
                                                                 type="button"
                                                                 className="btn btn-dark"
+                                                                onClick={() => reduceQuantity(guitar.id)}
                                                             >
                                                                 -
                                                             </button>
@@ -65,6 +67,7 @@ export default function Header({ cart, setCart }) {
                                                             <button
                                                                 type="button"
                                                                 className="btn btn-dark"
+                                                                onClick={() => increaseQuantity(guitar.id)}
                                                             >
                                                                 +
                                                             </button>
@@ -73,6 +76,7 @@ export default function Header({ cart, setCart }) {
                                                             <button
                                                                 className="btn btn-danger"
                                                                 type="button"
+                                                                onClick={() => removeItemFromCart(guitar.id)}
                                                             >
                                                                 X
                                                             </button>
@@ -82,9 +86,9 @@ export default function Header({ cart, setCart }) {
 
                                             </tbody>
                                         </table>
-                                        <p className="text-end">Total pagar: <span className="fw-bold">$ {cartTotal()} </span></p>
+                                        <p className="text-end">Total pagar: <span className="fw-bold">$ {cartTotal} </span></p>
                                         <button
-                                            onClick={ () => vaciarCarrito() }
+                                            onClick={() => clearCart()}
                                             className="btn btn-dark w-100 mt-3 p-2">
                                             Vaciar Carrito</button>
                                     </>

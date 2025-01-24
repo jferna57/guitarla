@@ -24,11 +24,46 @@ function App() {
         }
     }
 
+    function removeItemFromCart(guitarId) {
+        const updatedCart = cart.filter(guitar => guitar.id !== guitarId);
+        setCart(updatedCart);
+    }
+
+    function increaseQuantity(guitarId) {
+        const updatedCart = cart.map(guitar => {
+            if (guitar.id === guitarId) {
+                guitar.quantity++;
+            }
+            return guitar;
+        });
+        // Imprimir por consola el valor del carrito
+        setCart(updatedCart);
+    }
+
+    function reduceQuantity(guitarId) {
+        const updatedCart = cart.map(guitar => {
+            if (guitar.id === guitarId) {
+                guitar.quantity--;
+            }
+            return guitar;
+        });
+        // Elimina el ítem si la cantidad es igual o menor a 0
+        setCart(updatedCart.filter(guitar => guitar.quantity > 0));
+    }
+
+    function clearCart() {
+        setCart([]);
+    }
+
     return (
         <>
             <Header 
                 cart={cart}
                 setCart={setCart}
+                increaseQuantity={increaseQuantity}
+                reduceQuantity={reduceQuantity}
+                removeItemFromCart={removeItemFromCart}
+                clearCart={clearCart}
             />
             <main className="container-xl mt-5">
                 <h2 className="text-center">Nuestra Colección</h2>
