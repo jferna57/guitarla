@@ -15,10 +15,15 @@ function App() {
         localStorage.setItem('cart', JSON.stringify(cart));
     }, [cart]);
 
+    const MAX_ITEMS = 5;
+
     function addToCart(item) {
         const existingItemIndex = cart.findIndex(cartItem => cartItem.id === item.id);
 
         if (existingItemIndex !== -1) {
+            if (cart[existingItemIndex].quantity >= MAX_ITEMS) {
+                return;
+            }
             const updatedCart = [...cart];
             updatedCart[existingItemIndex].quantity++;
             setCart(updatedCart);
@@ -38,6 +43,9 @@ function App() {
     function increaseQuantity(guitarId) {
         const updatedCart = cart.map(guitar => {
             if (guitar.id === guitarId) {
+                if (guitar.quantity >= MAX_ITEMS) {
+                    return guitar;
+                }
                 guitar.quantity++;
             }
             return guitar;
