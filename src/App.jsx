@@ -2,13 +2,18 @@ import './App.css'
 import Footer from './components/Footer'
 import Header from './components/Header'
 import Guitar from './components/Guitar'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { db } from './data/db'
 
 function App() {
 
     const [data, setData] = useState(db)
     const [cart, setCart] = useState([])
+
+    // Almacenar el carrito desde el localStorage
+    useEffect(() => {
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }, [cart]);
 
     function addToCart(item) {
         const existingItemIndex = cart.findIndex(cartItem => cartItem.id === item.id);
@@ -22,6 +27,7 @@ function App() {
             item.quantity = 1;
             setCart(prevCart => [...prevCart, item]);
         }
+        saveLocalStorage();
     }
 
     function removeItemFromCart(guitarId) {
@@ -53,6 +59,10 @@ function App() {
 
     function clearCart() {
         setCart([]);
+    }
+
+    function saveLocalStorage() {
+        localStorage.setItem('cart', JSON.stringify(cart));
     }
 
     return (
